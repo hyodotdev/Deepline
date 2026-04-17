@@ -14,6 +14,16 @@ Perform a structured code review of a GitHub pull request against Deepline proje
 /review-pr https://github.com/hyodotdev/DeepLine/pull/123
 ```
 
+## Critical Rules
+
+1. **Fix ALL review comments NOW** — Every inline comment must be addressed with a code fix and committed before replying. No "will address in follow-up" or "will fix later".
+
+2. **Reply to inline comments using the proper API** — NEVER use `gh pr comment` for review items. Always use the comment-specific reply endpoint.
+
+3. **NEVER wrap commit hashes in backticks** — GitHub only auto-links plain text commit hashes. Write `Fixed in abc1234.` not `Fixed in \`abc1234\`.`
+
+4. **Resolve threads only after code is pushed** — Don't resolve threads for suggestions or items awaiting clarification.
+
 ## Review Process
 
 ### 1. Fetch PR Information
@@ -24,7 +34,41 @@ gh pr diff <number>
 gh pr checks <number>
 ```
 
-### 2. Review Checklist
+### 2. Check for Existing Review Comments
+
+```bash
+# Get all inline review comments with their IDs
+gh api repos/hyodotdev/DeepLine/pulls/<PR_NUMBER>/comments \
+  --jq '.[] | {id: .id, path: .path, line: .line, body: .body[:200]}'
+```
+
+### 3. Address Each Comment
+
+For each inline review comment:
+
+1. **Read the comment** — Understand what needs to be fixed
+2. **Fix the code** — Make the necessary changes
+3. **Test locally** — Run `./gradlew :server:test`
+4. **Commit the fix** — Create a focused commit
+5. **Push to the branch** — `git push`
+6. **Reply to the comment** — Use the reply API (see below)
+
+### 4. Reply to Inline Comments
+
+```bash
+# Reply to a specific inline comment
+gh api repos/hyodotdev/DeepLine/pulls/<PR_NUMBER>/comments/<COMMENT_ID>/replies \
+  -X POST -f body="Fixed in <COMMIT_HASH>. <DESCRIPTION>"
+```
+
+**Example replies:**
+```
+Fixed in abc1234. Added HMAC-SHA256 with server-side secret for OTP hashing.
+Fixed in def5678. Added IP rate limiting on /verify endpoint.
+Already addressed in 6a8abd2. SecureRandom is now used for OTP generation.
+```
+
+### 5. Review Checklist
 
 #### Security (Critical)
 - [ ] No plaintext secrets, API keys, or credentials
@@ -33,6 +77,8 @@ gh pr checks <number>
 - [ ] No path traversal in file operations
 - [ ] Rate limiting on write endpoints
 - [ ] Input validation on all user-provided data
+- [ ] Cryptographic operations use SecureRandom
+- [ ] OTP/tokens hashed with HMAC or bcrypt, not plain SHA-256
 
 #### Architecture
 - [ ] Changes align with module boundaries (`shared/`, `server/`, `clients/`)
@@ -54,53 +100,9 @@ gh pr checks <number>
 
 #### Compatibility
 - [ ] Database migrations are backward compatible
+- [ ] Migration versions don't conflict with existing ones
 - [ ] API changes are versioned appropriately
 - [ ] Client changes work with current server version
-
-### 3. Review Comments
-
-Categorize findings:
-
-- **BLOCKER** — Must fix before merge (security, data loss, crash)
-- **MAJOR** — Should fix before merge (bugs, missing validation)
-- **MINOR** — Nice to fix (style, naming, minor improvements)
-- **NIT** — Optional (formatting, personal preference)
-
-### 4. Output Format
-
-```markdown
-## PR Review: #<number> - <title>
-
-### Summary
-<1-2 sentence summary of what the PR does>
-
-### Changes Overview
-- **Files changed**: X
-- **Additions**: +Y
-- **Deletions**: -Z
-- **Modules affected**: server, android, ios, shared
-
-### Findings
-
-#### Blockers (X)
-- [ ] `file:line` - Description of issue
-
-#### Major Issues (X)
-- [ ] `file:line` - Description of issue
-
-#### Minor Issues (X)
-- [ ] `file:line` - Description of issue
-
-### Tests
-- [ ] Tests pass locally
-- [ ] New tests added for new functionality
-- [ ] Test coverage adequate
-
-### Recommendation
-**APPROVE** | **REQUEST CHANGES** | **COMMENT**
-
-<Reasoning for recommendation>
-```
 
 ## Deepline-Specific Checks
 
@@ -109,6 +111,7 @@ Categorize findings:
 - Store interface extended if new data operations
 - Both `InMemoryDeeplineStore` and `JdbcDeeplineStore` updated
 - WebSocket changes handle connection lifecycle
+- Rate limiting on all write endpoints
 
 ### Shared (`shared/`)
 - Models are `@Serializable`
@@ -134,8 +137,13 @@ gh pr view 123
 # View PR diff
 gh pr diff 123
 
-# View PR comments
-gh api repos/hyodotdev/DeepLine/pulls/123/comments
+# Get inline review comments
+gh api repos/hyodotdev/DeepLine/pulls/123/comments \
+  --jq '.[] | {id: .id, path: .path, line: .line, body: .body[:100]}'
+
+# Reply to inline comment
+gh api repos/hyodotdev/DeepLine/pulls/123/comments/COMMENT_ID/replies \
+  -X POST -f body="Fixed in COMMIT_HASH. Description."
 
 # View check status
 gh pr checks 123
@@ -154,3 +162,4 @@ cd clients/ios && xcodegen generate && xcodebuild -scheme DeeplineIOS build
 - Do not auto-approve PRs
 - Do not merge PRs (leave that to maintainers)
 - Do not run full security audit (use `/audit-code` for that)
+- Do not use `gh pr comment` for review item responses

@@ -11,8 +11,9 @@ import io.ktor.server.routing.Route
 import io.ktor.server.routing.post
 import io.ktor.server.routing.route
 import kotlinx.serialization.Serializable
-import java.security.MessageDigest
 import java.security.SecureRandom
+import javax.crypto.Mac
+import javax.crypto.spec.SecretKeySpec
 
 @Serializable
 data class SendOtpRequest(
@@ -36,21 +37,41 @@ data class VerifyOtpRequest(
 /** Shared SecureRandom instance for OTP generation. Thread-safe. */
 private val secureRandom = SecureRandom()
 
+/**
+ * Normalize phone number for consistent rate limiting and storage.
+ * Strips all non-digit characters and normalizes country code.
+ */
+private fun normalizePhone(countryCode: String, phoneNumber: String): Pair<String, String> {
+  val normalizedCountry = countryCode.trim().replace(Regex("[^0-9+]"), "").let {
+    if (it.startsWith("+")) it else "+$it"
+  }
+  val normalizedPhone = phoneNumber.trim().replace(Regex("[^0-9]"), "")
+  return normalizedCountry to normalizedPhone
+}
+
 fun Route.installPhoneAuthRoutes(
   config: DeeplineServerConfig,
   store: DeeplineStore,
   rateLimiter: RateLimiter,
 ) {
+  val hmacSecret = config.otpHmacSecret.toByteArray(Charsets.UTF_8)
+
   route("/v1/auth/phone") {
     post("/send-code") {
       val request = call.receive<SendOtpRequest>()
 
-      // Rate limit by phone number
+      // Normalize phone input for consistent rate limiting and storage
+      val (normalizedCountry, normalizedPhone) = normalizePhone(
+        request.countryCode,
+        request.phoneNumber,
+      )
+
+      // Rate limit by normalized phone number
       enforceRateLimit(
         call = call,
         rateLimiter = rateLimiter,
         scope = "phone_send_code",
-        subject = "${request.countryCode}:${request.phoneNumber}",
+        subject = "$normalizedCountry:$normalizedPhone",
         limit = 3,
         windowSeconds = 300, // 3 requests per 5 minutes per phone
       )
@@ -67,22 +88,25 @@ fun Route.installPhoneAuthRoutes(
 
       // Generate a 6-digit OTP using cryptographically secure random
       val otp = (100000 + secureRandom.nextInt(900000)).toString()
-      val otpHash = hashOtp(otp)
+      val otpHash = hmacOtp(otp, hmacSecret)
 
       val verification = store.createPhoneVerification(
         request = PhoneVerificationRequest(
-          phoneNumber = request.phoneNumber,
-          countryCode = request.countryCode,
+          phoneNumber = normalizedPhone,
+          countryCode = normalizedCountry,
         ),
         otpHash = otpHash,
       )
 
-      // In production, send OTP via SMS here
-      // For development, we'll include the OTP in the response (REMOVE IN PRODUCTION)
-      val devMessage = if (!config.strictCryptoEnforcement) {
+      // Only expose OTP in development/local/test environments (never in production)
+      val isDevelopment = config.environment.equals("local", ignoreCase = true) ||
+        config.environment.equals("development", ignoreCase = true) ||
+        config.environment.equals("test", ignoreCase = true)
+
+      val devMessage = if (isDevelopment) {
         "Development mode: OTP is $otp"
       } else {
-        "Verification code sent to ${request.countryCode} ${request.phoneNumber}"
+        "Verification code sent to $normalizedCountry $normalizedPhone"
       }
 
       call.respond(
@@ -97,22 +121,32 @@ fun Route.installPhoneAuthRoutes(
     post("/verify") {
       val request = call.receive<VerifyOtpRequest>()
 
-      // Rate limit verification attempts
+      // Rate limit verification attempts per verification ID (aligned with max_attempts in DB)
       enforceRateLimit(
         call = call,
         rateLimiter = rateLimiter,
         scope = "phone_verify",
         subject = request.verificationId,
-        limit = 5,
-        windowSeconds = 60, // 5 attempts per minute per verification
+        limit = 3, // Aligned with phone_verifications.max_attempts
+        windowSeconds = 60,
       )
 
-      val otpHash = hashOtp(request.otpCode)
+      // Also rate limit by IP to prevent distributed brute-force
+      enforceRateLimit(
+        call = call,
+        rateLimiter = rateLimiter,
+        scope = "phone_verify_ip",
+        subject = rateLimitSubject(call, null),
+        limit = 20,
+        windowSeconds = 300, // 20 verify attempts per 5 minutes per IP
+      )
+
+      val otpHash = hmacOtp(request.otpCode, hmacSecret)
 
       val result = store.verifyOtp(
         command = VerifyOtpCommand(
           verificationId = request.verificationId,
-          otpCode = request.otpCode,
+          otpCode = "", // Don't pass plaintext OTP to avoid accidental logging
         ),
         otpHash = otpHash,
       )
@@ -122,8 +156,13 @@ fun Route.installPhoneAuthRoutes(
   }
 }
 
-private fun hashOtp(otp: String): String {
-  val digest = MessageDigest.getInstance("SHA-256")
-  val hashBytes = digest.digest(otp.toByteArray())
-  return hashBytes.joinToString("") { "%02x".format(it) }
+/**
+ * Compute HMAC-SHA256 of OTP with server-side secret.
+ * This prevents offline brute-force attacks if the DB is leaked.
+ */
+private fun hmacOtp(otp: String, secret: ByteArray): String {
+  val mac = Mac.getInstance("HmacSHA256")
+  mac.init(SecretKeySpec(secret, "HmacSHA256"))
+  val hashBytes = mac.doFinal(otp.toByteArray(Charsets.UTF_8))
+  return hashBytes.joinToString("") { "%02x".format(it.toInt() and 0xFF) }
 }

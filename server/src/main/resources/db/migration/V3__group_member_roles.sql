@@ -32,6 +32,14 @@ SET member_count = (
   WHERE cm.conversation_id = c.conversation_id
 );
 
+-- Backfill joined_at_epoch_ms from conversation's creation time for legacy rows.
+-- This ensures OWNER selection below has meaningful ordering, not arbitrary user_id ordering.
+UPDATE conversation_members cm
+SET joined_at_epoch_ms = c.created_at_epoch_ms
+FROM conversations c
+WHERE cm.conversation_id = c.conversation_id
+  AND cm.joined_at_epoch_ms = 0;
+
 -- Set the first member as OWNER for existing conversations (creator)
 -- This uses a subquery to find the first member (lowest joined_at or user_id as tiebreaker)
 UPDATE conversation_members cm
