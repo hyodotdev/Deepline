@@ -6,7 +6,6 @@ import dev.hyo.deepline.server.routes.installAccountRoutes
 import dev.hyo.deepline.server.routes.installAttachmentRoutes
 import dev.hyo.deepline.server.routes.installConversationRoutes
 import dev.hyo.deepline.server.routes.installHealthRoutes
-import dev.hyo.deepline.server.routes.installPhoneAuthRoutes
 import dev.hyo.deepline.server.routes.RateLimitExceededException
 import dev.hyo.deepline.server.rate.createRateLimiterRuntime
 import dev.hyo.deepline.server.store.createStoreRuntime
@@ -78,6 +77,5 @@ fun Application.deeplineModule(
     installAccountRoutes(config, store, rateLimiter)
     installConversationRoutes(config, store, socketHub, rateLimiter, pushService)
     installAttachmentRoutes(config, store, blobStore, rateLimiter)
-    installPhoneAuthRoutes(config, store, rateLimiter)
   }
 }
