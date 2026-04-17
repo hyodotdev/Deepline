@@ -1,0 +1,29 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(xcrun simctl *)",
+      "Bash(/Users/crossplatformkorea/Library/Android/sdk/emulator/emulator -list-avds)",
+      "Read(//Users/crossplatformkorea/Library/Android/sdk/cmdline-tools/**)",
+      "Bash(adb devices *)",
+      "Bash(/Users/crossplatformkorea/Library/Android/sdk/emulator/emulator -avd Deepline_Pixel_35 -no-snapshot-load -no-boot-anim)",
+      "Bash(tee /tmp/deepline-emu.log)",
+      "Bash(xcodegen generate *)",
+      "Bash(xcodebuild -project DeeplineIOS.xcodeproj -scheme DeeplineIOS -configuration Debug -destination 'platform=iOS Simulator,id=471C4649-13B1-4247-86E3-7A6D5577B454' -derivedDataPath build build)",
+      "Bash(curl -sS --max-time 1 http://127.0.0.1:9091/healthz)",
+      "Bash(/Users/crossplatformkorea/Library/Android/sdk/platform-tools/adb -e wait-for-device)",
+      "Bash(/Users/crossplatformkorea/Library/Android/sdk/platform-tools/adb -e shell 'until getprop sys.boot_completed | grep 1 >/dev/null; do sleep 2; done')",
+      "Bash(/Users/crossplatformkorea/Library/Android/sdk/platform-tools/adb -e install -r /Users/crossplatformkorea/Github/hyodotdev/DeepLine/clients/android/app/build/outputs/apk/debug/app-debug.apk)",
+      "Bash(open -a Simulator)",
+      "Bash(/Users/crossplatformkorea/Library/Android/sdk/platform-tools/adb -e shell pm list packages)",
+      "Bash(/Users/crossplatformkorea/Library/Android/sdk/platform-tools/adb -e shell am force-stop dev.hyo.deepline.android)",
+      "Bash(/Users/crossplatformkorea/Library/Android/sdk/platform-tools/adb -e install -r /Users/crossplatformkorea/Github/hyodotdev/DeepLine/clients/android/app/build/outputs/apk/debug/androidApp-debug.apk)",
+      "Bash(/Users/crossplatformkorea/Library/Android/sdk/platform-tools/adb -e reverse tcp:9091 tcp:9091)",
+      "Bash(/Users/crossplatformkorea/Library/Android/sdk/platform-tools/adb -e reverse --list)",
+      "Bash(curl -sS -4 --max-time 2 http://127.0.0.1:9091/healthz)",
+      "Bash(/Users/crossplatformkorea/Library/Android/sdk/platform-tools/adb -e shell am start -n dev.hyo.deepline.android/.MainActivity --ez deepline.reset_state true --es deepline.server_url http://127.0.0.1:9091 --es deepline.user_id user_1 --es deepline.device_id android_smokeA --es deepline.display_name Alice --es deepline.device_name 'Android Emulator')",
+      "Bash(/Users/crossplatformkorea/Library/Android/sdk/platform-tools/adb -e logcat -c)",
+      "Bash(/Users/crossplatformkorea/Library/Android/sdk/platform-tools/adb -e shell am start -n dev.hyo.deepline.android/.MainActivity --ez deepline.reset_state true --es deepline.server_url http://127.0.0.1:9091 --es deepline.user_id user_1 --es deepline.device_id android_smokeA --es deepline.display_name Alice)",
+      "Bash(/Users/crossplatformkorea/Library/Android/sdk/platform-tools/adb -e logcat -d -v time)"
+    ]
+  }
+}

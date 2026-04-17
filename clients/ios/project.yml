@@ -1,0 +1,37 @@
+name: DeeplineIOS
+options:
+  createIntermediateGroups: true
+settings:
+  base:
+    SWIFT_VERSION: 5.10
+    PRODUCT_BUNDLE_IDENTIFIER: dev.hyo.deepline.ios
+    GENERATE_INFOPLIST_FILE: YES
+    IPHONEOS_DEPLOYMENT_TARGET: 17.0
+targets:
+  DeeplineIOS:
+    type: application
+    platform: iOS
+    deploymentTarget: "17.0"
+    sources:
+      - DeeplineIOS/Sources
+    settings:
+      base:
+        PRODUCT_NAME: DeeplineIOS
+        INFOPLIST_KEY_CFBundleDisplayName: Deepline
+        INFOPLIST_KEY_UILaunchScreen_Generation: YES
+        INFOPLIST_KEY_UIApplicationSceneManifest_Generation: YES
+        INFOPLIST_KEY_NSAppTransportSecurity_NSAllowsLocalNetworking: YES
+        INFOPLIST_KEY_UIStatusBarStyle: UIStatusBarStyleDefault
+        CODE_SIGN_STYLE: Automatic
+  DeeplineIOSUITests:
+    type: bundle.ui-testing
+    platform: iOS
+    deploymentTarget: "17.0"
+    sources:
+      - DeeplineIOSUITests
+    dependencies:
+      - target: DeeplineIOS
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: dev.hyo.deepline.ios.uitests
+        GENERATE_INFOPLIST_FILE: YES

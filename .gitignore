@@ -1,0 +1,19 @@
+.gradle/
+.kotlin/
+build/
+**/build/
+out/
+node_modules/
+.DS_Store
+
+# Kotlin/Native and Xcode caches
+shared/.konan/
+clients/ios/.build/
+DerivedData/
+.env
+.env.local
+
+# Archived Expo prototype artifacts
+prototype/expo-rn/node_modules/
+prototype/expo-rn/.expo/
+prototype/expo-rn/.convex/

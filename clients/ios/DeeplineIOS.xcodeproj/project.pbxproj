@@ -1,0 +1,429 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 77;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		07DFBFEC146D1D2DFFF87816 /* DeeplineAppModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 058352B1AD0FDF434FC3DE42 /* DeeplineAppModel.swift */; };
+		0DAEE181FBA8760B9E7A61BB /* RootView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6738BEDD43BFC4DA6C9D97E0 /* RootView.swift */; };
+		2AD304DFB92495D1EF533CC5 /* CryptoGate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 443446AAF2B39CE7ED528F08 /* CryptoGate.swift */; };
+		717C2A51F8AD4152ABC32FE1 /* DeeplineIOSApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = D94BF5289564069D849238EC /* DeeplineIOSApp.swift */; };
+		D17037B8DDA6A3B754DED8FA /* DeeplineServerClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = 23BB8749665F45C493196FED /* DeeplineServerClient.swift */; };
+		E758EA9DABDA6E57F1B9E4FD /* DeeplineIOSUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 689F991B6EC9AA9512507D7C /* DeeplineIOSUITests.swift */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXContainerItemProxy section */
+		30BCEE1B4730C311FFE7DD4B /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 404ECD2CA0369E9857E2ECE1 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = DA7D99D9D773F103F7D90132;
+			remoteInfo = DeeplineIOS;
+		};
+/* End PBXContainerItemProxy section */
+
+/* Begin PBXFileReference section */
+		058352B1AD0FDF434FC3DE42 /* DeeplineAppModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DeeplineAppModel.swift; sourceTree = "<group>"; };
+		23BB8749665F45C493196FED /* DeeplineServerClient.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DeeplineServerClient.swift; sourceTree = "<group>"; };
+		443446AAF2B39CE7ED528F08 /* CryptoGate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CryptoGate.swift; sourceTree = "<group>"; };
+		665F075AC3E48CE89876F739 /* DeeplineIOSUITests.xctest */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = wrapper.cfbundle; path = DeeplineIOSUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		6738BEDD43BFC4DA6C9D97E0 /* RootView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RootView.swift; sourceTree = "<group>"; };
+		689F991B6EC9AA9512507D7C /* DeeplineIOSUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DeeplineIOSUITests.swift; sourceTree = "<group>"; };
+		D94BF5289564069D849238EC /* DeeplineIOSApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DeeplineIOSApp.swift; sourceTree = "<group>"; };
+		DFDE688AD6BF2E89E81B501E /* DeeplineIOS.app */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = wrapper.application; path = DeeplineIOS.app; sourceTree = BUILT_PRODUCTS_DIR; };
+/* End PBXFileReference section */
+
+/* Begin PBXGroup section */
+		229B7BE2AA5FC8D11D65F65A /* DeeplineIOSUITests */ = {
+			isa = PBXGroup;
+			children = (
+				689F991B6EC9AA9512507D7C /* DeeplineIOSUITests.swift */,
+			);
+			path = DeeplineIOSUITests;
+			sourceTree = "<group>";
+		};
+		83A4AD9338B191F7C98745FC /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				DFDE688AD6BF2E89E81B501E /* DeeplineIOS.app */,
+				665F075AC3E48CE89876F739 /* DeeplineIOSUITests.xctest */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		9565BD636A235EF39C53506B /* DeeplineIOS */ = {
+			isa = PBXGroup;
+			children = (
+				FF281ECB2B4C7773F056E40F /* Sources */,
+			);
+			path = DeeplineIOS;
+			sourceTree = "<group>";
+		};
+		9C5BBF2EFE2FAAF91CC6491D = {
+			isa = PBXGroup;
+			children = (
+				9565BD636A235EF39C53506B /* DeeplineIOS */,
+				229B7BE2AA5FC8D11D65F65A /* DeeplineIOSUITests */,
+				83A4AD9338B191F7C98745FC /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+		FF281ECB2B4C7773F056E40F /* Sources */ = {
+			isa = PBXGroup;
+			children = (
+				443446AAF2B39CE7ED528F08 /* CryptoGate.swift */,
+				058352B1AD0FDF434FC3DE42 /* DeeplineAppModel.swift */,
+				D94BF5289564069D849238EC /* DeeplineIOSApp.swift */,
+				23BB8749665F45C493196FED /* DeeplineServerClient.swift */,
+				6738BEDD43BFC4DA6C9D97E0 /* RootView.swift */,
+			);
+			path = Sources;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		78E98EA007A15B2CA0A16DAE /* DeeplineIOSUITests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = B3AE4B08D2040FC74B51E1F1 /* Build configuration list for PBXNativeTarget "DeeplineIOSUITests" */;
+			buildPhases = (
+				E053218656F47CC2F2B6803F /* Sources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				F5DE45AD6B24755880BB0C84 /* PBXTargetDependency */,
+			);
+			name = DeeplineIOSUITests;
+			packageProductDependencies = (
+			);
+			productName = DeeplineIOSUITests;
+			productReference = 665F075AC3E48CE89876F739 /* DeeplineIOSUITests.xctest */;
+			productType = "com.apple.product-type.bundle.ui-testing";
+		};
+		DA7D99D9D773F103F7D90132 /* DeeplineIOS */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = BC0F7CA602DC653AD4D5B4BD /* Build configuration list for PBXNativeTarget "DeeplineIOS" */;
+			buildPhases = (
+				9036431554A56A7E566A0851 /* Sources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = DeeplineIOS;
+			packageProductDependencies = (
+			);
+			productName = DeeplineIOS;
+			productReference = DFDE688AD6BF2E89E81B501E /* DeeplineIOS.app */;
+			productType = "com.apple.product-type.application";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		404ECD2CA0369E9857E2ECE1 /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				BuildIndependentTargetsInParallel = YES;
+				LastUpgradeCheck = 1430;
+				TargetAttributes = {
+					78E98EA007A15B2CA0A16DAE = {
+						TestTargetID = DA7D99D9D773F103F7D90132;
+					};
+					DA7D99D9D773F103F7D90132 = {
+						ProvisioningStyle = Automatic;
+					};
+				};
+			};
+			buildConfigurationList = CA0AFFE2B5C2A65B0B6694EB /* Build configuration list for PBXProject "DeeplineIOS" */;
+			compatibilityVersion = "Xcode 14.0";
+			developmentRegion = en;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				Base,
+				en,
+			);
+			mainGroup = 9C5BBF2EFE2FAAF91CC6491D;
+			minimizedProjectReferenceProxies = 1;
+			preferredProjectObjectVersion = 77;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				DA7D99D9D773F103F7D90132 /* DeeplineIOS */,
+				78E98EA007A15B2CA0A16DAE /* DeeplineIOSUITests */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXSourcesBuildPhase section */
+		9036431554A56A7E566A0851 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				2AD304DFB92495D1EF533CC5 /* CryptoGate.swift in Sources */,
+				07DFBFEC146D1D2DFFF87816 /* DeeplineAppModel.swift in Sources */,
+				717C2A51F8AD4152ABC32FE1 /* DeeplineIOSApp.swift in Sources */,
+				D17037B8DDA6A3B754DED8FA /* DeeplineServerClient.swift in Sources */,
+				0DAEE181FBA8760B9E7A61BB /* RootView.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		E053218656F47CC2F2B6803F /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				E758EA9DABDA6E57F1B9E4FD /* DeeplineIOSUITests.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		F5DE45AD6B24755880BB0C84 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = DA7D99D9D773F103F7D90132 /* DeeplineIOS */;
+			targetProxy = 30BCEE1B4730C311FFE7DD4B /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
+
+/* Begin XCBuildConfiguration section */
+		06F61356AFC59990EE52D39F /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				GENERATE_INFOPLIST_FILE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = dev.hyo.deepline.ios.uitests;
+				SDKROOT = iphoneos;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_TARGET_NAME = DeeplineIOS;
+			};
+			name = Debug;
+		};
+		61DC82E58872C734EA80BC71 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				CODE_SIGN_STYLE = Automatic;
+				INFOPLIST_KEY_CFBundleDisplayName = Deepline;
+				INFOPLIST_KEY_NSAppTransportSecurity_NSAllowsLocalNetworking = YES;
+				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
+				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
+				INFOPLIST_KEY_UIStatusBarStyle = UIStatusBarStyleDefault;
+				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				PRODUCT_NAME = DeeplineIOS;
+				SDKROOT = iphoneos;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Release;
+		};
+		69035E7205415BF9D8A05725 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				GENERATE_INFOPLIST_FILE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				MTL_FAST_MATH = YES;
+				PRODUCT_BUNDLE_IDENTIFIER = dev.hyo.deepline.ios;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = iphoneos;
+				SWIFT_COMPILATION_MODE = wholemodule;
+				SWIFT_OPTIMIZATION_LEVEL = "-O";
+				SWIFT_VERSION = 5.1;
+			};
+			name = Release;
+		};
+		A55E15489ABCBC8DECBDA350 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				GENERATE_INFOPLIST_FILE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = dev.hyo.deepline.ios.uitests;
+				SDKROOT = iphoneos;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_TARGET_NAME = DeeplineIOS;
+			};
+			name = Release;
+		};
+		C06C1DD8FE15E8A2DC46C7F3 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				CODE_SIGN_STYLE = Automatic;
+				INFOPLIST_KEY_CFBundleDisplayName = Deepline;
+				INFOPLIST_KEY_NSAppTransportSecurity_NSAllowsLocalNetworking = YES;
+				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
+				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
+				INFOPLIST_KEY_UIStatusBarStyle = UIStatusBarStyleDefault;
+				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				PRODUCT_NAME = DeeplineIOS;
+				SDKROOT = iphoneos;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
+		E3D5EC47EB434C95BBB18BCF /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"$(inherited)",
+					"DEBUG=1",
+				);
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				GENERATE_INFOPLIST_FILE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
+				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
+				MTL_FAST_MATH = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				PRODUCT_BUNDLE_IDENTIFIER = dev.hyo.deepline.ios;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = iphoneos;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				SWIFT_VERSION = 5.1;
+			};
+			name = Debug;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		B3AE4B08D2040FC74B51E1F1 /* Build configuration list for PBXNativeTarget "DeeplineIOSUITests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				06F61356AFC59990EE52D39F /* Debug */,
+				A55E15489ABCBC8DECBDA350 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Debug;
+		};
+		BC0F7CA602DC653AD4D5B4BD /* Build configuration list for PBXNativeTarget "DeeplineIOS" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				C06C1DD8FE15E8A2DC46C7F3 /* Debug */,
+				61DC82E58872C734EA80BC71 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Debug;
+		};
+		CA0AFFE2B5C2A65B0B6694EB /* Build configuration list for PBXProject "DeeplineIOS" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				E3D5EC47EB434C95BBB18BCF /* Debug */,
+				69035E7205415BF9D8A05725 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Debug;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = 404ECD2CA0369E9857E2ECE1 /* Project object */;
+}
