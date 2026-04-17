@@ -7,6 +7,9 @@ ALTER TABLE conversation_members
 ALTER TABLE conversation_members
   ADD COLUMN added_by_user_id VARCHAR(128);
 
+-- NOTE: DEFAULT 0 is only for migration of existing rows. Application code
+-- MUST always provide joined_at_epoch_ms when inserting new members.
+-- The 0 value is backfilled below from conversations.created_at_epoch_ms.
 ALTER TABLE conversation_members
   ADD COLUMN joined_at_epoch_ms BIGINT NOT NULL DEFAULT 0;
 

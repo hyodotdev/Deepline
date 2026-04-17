@@ -14,14 +14,24 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      - name: Download failure artifacts
-        uses: actions/download-artifact@v4
-        with:
-          run-id: ${{ github.event.workflow_run.id }}
-          github-token: ${{ secrets.GITHUB_TOKEN }}
-        continue-on-error: true
+      - name: Check for existing issue
+        id: check-issue
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          # Check if an open issue already exists for this workflow + branch
+          BRANCH="${{ github.event.workflow_run.head_branch }}"
+          WORKFLOW="${{ github.event.workflow_run.name }}"
+          EXISTING=$(gh issue list --state open --label ai-fix --search "in:title [AI-FIX] CI Failure: $WORKFLOW" --json number,title --jq ".[0].number // empty")
+          if [ -n "$EXISTING" ]; then
+            echo "skip=true" >> $GITHUB_OUTPUT
+            echo "Found existing issue #$EXISTING, skipping duplicate creation"
+          else
+            echo "skip=false" >> $GITHUB_OUTPUT
+          fi
 
       - name: Create failure report
+        if: steps.check-issue.outputs.skip == 'false'
         run: |
           cat > failure-report.md << 'EOF'
           ## CI Failure Report
@@ -40,14 +50,13 @@ jobs:
           5. Create a fix
           6. Open a PR with label `ai-generated-fix`
 
-          ### Failure Artifacts
+          ### Failure Details
 
+          See the workflow run URL above for full logs and error details.
           EOF
 
-          # Append any downloaded test results
-          find . -name "TEST-*.xml" -exec echo "#### {}" \; -exec head -50 {} \; >> failure-report.md 2>/dev/null || echo "No test XML artifacts found" >> failure-report.md
-
       - name: Create issue for Claude
+        if: steps.check-issue.outputs.skip == 'false'
         uses: peter-evans/create-issue-from-file@v5
         with:
           title: "[AI-FIX] CI Failure: ${{ github.event.workflow_run.name }}"

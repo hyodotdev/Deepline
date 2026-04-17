@@ -33,10 +33,11 @@ jobs:
 
       - name: Run tests
         working-directory: clients/ios
+        continue-on-error: true  # Tests may not exist yet; remove when tests are added
         run: |
           xcodebuild -project DeeplineIOS.xcodeproj \
             -scheme DeeplineIOS \
             -destination 'platform=iOS Simulator,name=iPhone 15,OS=17.2' \
             -configuration Debug \
             test \
-            CODE_SIGNING_ALLOWED=NO || true
+            CODE_SIGNING_ALLOWED=NO

@@ -5,6 +5,7 @@ import dev.hyo.deepline.server.rate.RateLimiter
 import dev.hyo.deepline.server.store.DeeplineStore
 import dev.hyo.deepline.shared.model.PhoneVerificationRequest
 import dev.hyo.deepline.shared.model.VerifyOtpCommand
+import io.ktor.http.HttpStatusCode
 import io.ktor.server.request.receive
 import io.ktor.server.response.respond
 import io.ktor.server.routing.Route
@@ -40,13 +41,34 @@ private val secureRandom = SecureRandom()
 /**
  * Normalize phone number for consistent rate limiting and storage.
  * Strips all non-digit characters and normalizes country code.
+ * Returns null if validation fails.
  */
-private fun normalizePhone(countryCode: String, phoneNumber: String): Pair<String, String> {
+private fun normalizeAndValidatePhone(countryCode: String, phoneNumber: String): Pair<String, String>? {
   val normalizedCountry = countryCode.trim().replace(Regex("[^0-9+]"), "").let {
     if (it.startsWith("+")) it else "+$it"
   }
   val normalizedPhone = phoneNumber.trim().replace(Regex("[^0-9]"), "")
+
+  // Validate: country code 1-4 digits, phone number 4-15 digits (E.164 spec)
+  val countryDigits = normalizedCountry.removePrefix("+")
+  if (countryDigits.isEmpty() || countryDigits.length > 4) return null
+  if (normalizedPhone.length < 4 || normalizedPhone.length > 15) return null
+
   return normalizedCountry to normalizedPhone
+}
+
+/**
+ * Validate OTP code format: must be exactly 6 digits.
+ */
+private fun isValidOtpCode(code: String): Boolean {
+  return code.length == 6 && code.all { it.isDigit() }
+}
+
+/**
+ * Validate verification ID format.
+ */
+private fun isValidVerificationId(id: String): Boolean {
+  return id.isNotBlank() && id.length <= 128 && id.matches(Regex("^[a-zA-Z0-9_-]+$"))
 }
 
 fun Route.installPhoneAuthRoutes(
@@ -60,11 +82,13 @@ fun Route.installPhoneAuthRoutes(
     post("/send-code") {
       val request = call.receive<SendOtpRequest>()
 
-      // Normalize phone input for consistent rate limiting and storage
-      val (normalizedCountry, normalizedPhone) = normalizePhone(
-        request.countryCode,
-        request.phoneNumber,
-      )
+      // Validate and normalize phone input
+      val normalized = normalizeAndValidatePhone(request.countryCode, request.phoneNumber)
+      if (normalized == null) {
+        call.respond(HttpStatusCode.BadRequest, mapOf("error" to "Invalid phone number or country code"))
+        return@post
+      }
+      val (normalizedCountry, normalizedPhone) = normalized
 
       // Rate limit by normalized phone number
       enforceRateLimit(
@@ -120,6 +144,16 @@ fun Route.installPhoneAuthRoutes(
 
     post("/verify") {
       val request = call.receive<VerifyOtpRequest>()
+
+      // Validate inputs
+      if (!isValidVerificationId(request.verificationId)) {
+        call.respond(HttpStatusCode.BadRequest, mapOf("error" to "Invalid verification ID"))
+        return@post
+      }
+      if (!isValidOtpCode(request.otpCode)) {
+        call.respond(HttpStatusCode.BadRequest, mapOf("error" to "Invalid OTP code format"))
+        return@post
+      }
 
       // Rate limit verification attempts per verification ID (aligned with max_attempts in DB)
       enforceRateLimit(

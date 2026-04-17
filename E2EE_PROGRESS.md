@@ -159,13 +159,12 @@ grep -rn "decrypt" server/src/main --include="*.kt"
 
 - [Signal Protocol Specification](https://signal.org/docs/)
 - [MLS RFC 9420](https://www.rfc-editor.org/rfc/rfc9420.html)
-- [libsignal-android](https://github.com/signalapp/libsignal)
-- [libsignal-swift](https://github.com/nicegram/nicegram-ios-lib-libsignal-client)
+- [libsignal](https://github.com/signalapp/libsignal) — Official Signal library (Rust core with Swift/Kotlin bindings)
 
 ## Progress Log
 
 | Date | Change | Author |
 |------|--------|--------|
-| 2025-04-17 | Initial architecture with placeholder crypto | Claude |
-| 2025-04-17 | Added CryptoBridge interfaces | Claude |
-| 2025-04-18 | Added CI/CD and autonomous infrastructure | Claude |
+| 2026-04-17 | Initial architecture with placeholder crypto | Claude |
+| 2026-04-17 | Added CryptoBridge interfaces | Claude |
+| 2026-04-18 | Added CI/CD and autonomous infrastructure | Claude |
