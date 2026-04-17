@@ -1,0 +1,59 @@
+{
+  "version": "1.0",
+  "description": "Quality gates for DeepLine autonomous development",
+  "gates": {
+    "build": {
+      "command": "./gradlew assemble",
+      "description": "All modules must compile successfully",
+      "required": true
+    },
+    "server-tests": {
+      "command": "./gradlew :server:test --info",
+      "description": "Server unit and integration tests",
+      "required": true,
+      "minCoverage": 70
+    },
+    "shared-tests": {
+      "command": "./gradlew :shared:serverTest --info",
+      "description": "Shared module JVM/server tests",
+      "required": true,
+      "minCoverage": 80
+    },
+    "android-tests": {
+      "command": "./gradlew :clients:android:app:testDebugUnitTest --info",
+      "description": "Android unit tests",
+      "required": true
+    },
+    "security": {
+      "description": "Crypto boundary and security checks",
+      "checks": [
+        "no-plaintext-server",
+        "crypto-interfaces-only",
+        "secure-random",
+        "rate-limiting",
+        "no-hardcoded-secrets"
+      ],
+      "required": true
+    },
+    "lint": {
+      "command": "./gradlew ktlintCheck",
+      "description": "Kotlin code style",
+      "required": false
+    }
+  },
+  "autoFix": {
+    "enabled": true,
+    "maxIterations": 5,
+    "failurePatterns": ".claude/failure-patterns.json",
+    "strategy": "fix-and-retest"
+  },
+  "coverage": {
+    "tool": "kover",
+    "reportCommand": "./gradlew koverHtmlReport",
+    "thresholds": {
+      "server": 70,
+      "shared": 80,
+      "android": 60
+    }
+  }
+}

@@ -1,0 +1,63 @@
+name: Server CI
+on:
+  push:
+    paths: ['server/**', 'shared/**']
+  pull_request:
+    paths: ['server/**', 'shared/**']
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    services:
+      postgres:
+        image: postgres:15
+        env:
+          POSTGRES_DB: deepline_test
+          POSTGRES_USER: test
+          POSTGRES_PASSWORD: test
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+        ports: ['5432:5432']
+      redis:
+        image: redis:7
+        options: >-
+          --health-cmd "redis-cli ping"
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+        ports: ['6379:6379']
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-java@v4
+        with:
+          distribution: 'temurin'
+          java-version: '17'
+
+      - name: Setup Gradle
+        uses: gradle/actions/setup-gradle@v4
+
+      - name: Run server tests
+        run: ./gradlew :server:test --info
+        env:
+          DEEPLINE_STORE_MODE: postgres
+          DEEPLINE_DATABASE_URL: jdbc:postgresql://localhost:5432/deepline_test
+          DEEPLINE_DATABASE_USER: test
+          DEEPLINE_DATABASE_PASSWORD: test
+          DEEPLINE_RATE_LIMITER_MODE: redis
+          DEEPLINE_REDIS_URL: redis://localhost:6379
+
+      - name: Run shared serverTest
+        run: ./gradlew :shared:serverTest --info
+
+      - name: Upload test results
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: server-test-results
+          path: |
+            server/build/reports/tests/
+            shared/build/reports/tests/

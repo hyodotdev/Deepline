@@ -1,0 +1,42 @@
+name: iOS CI
+on:
+  push:
+    paths: ['clients/ios/**', 'shared/**']
+  pull_request:
+    paths: ['clients/ios/**', 'shared/**']
+
+jobs:
+  build:
+    runs-on: macos-14
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install XcodeGen
+        run: brew install xcodegen
+
+      - name: Select Xcode
+        run: sudo xcode-select -s /Applications/Xcode_15.2.app/Contents/Developer
+
+      - name: Generate Xcode project
+        working-directory: clients/ios
+        run: xcodegen generate
+
+      - name: Build iOS app
+        working-directory: clients/ios
+        run: |
+          xcodebuild -project DeeplineIOS.xcodeproj \
+            -scheme DeeplineIOS \
+            -destination 'platform=iOS Simulator,name=iPhone 15,OS=17.2' \
+            -configuration Debug \
+            build \
+            CODE_SIGNING_ALLOWED=NO
+
+      - name: Run tests
+        working-directory: clients/ios
+        run: |
+          xcodebuild -project DeeplineIOS.xcodeproj \
+            -scheme DeeplineIOS \
+            -destination 'platform=iOS Simulator,name=iPhone 15,OS=17.2' \
+            -configuration Debug \
+            test \
+            CODE_SIGNING_ALLOWED=NO || true

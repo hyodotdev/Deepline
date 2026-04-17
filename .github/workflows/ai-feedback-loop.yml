@@ -1,0 +1,55 @@
+name: AI Feedback Loop
+on:
+  workflow_run:
+    workflows: ["Server CI", "Shared Module CI", "Android CI", "iOS CI"]
+    types: [completed]
+
+jobs:
+  analyze-failure:
+    if: ${{ github.event.workflow_run.conclusion == 'failure' }}
+    runs-on: ubuntu-latest
+    permissions:
+      issues: write
+      actions: read
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Download failure artifacts
+        uses: actions/download-artifact@v4
+        with:
+          run-id: ${{ github.event.workflow_run.id }}
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+        continue-on-error: true
+
+      - name: Create failure report
+        run: |
+          cat > failure-report.md << 'EOF'
+          ## CI Failure Report
+
+          **Workflow**: ${{ github.event.workflow_run.name }}
+          **Run**: ${{ github.event.workflow_run.html_url }}
+          **Branch**: ${{ github.event.workflow_run.head_branch }}
+          **Commit**: ${{ github.event.workflow_run.head_sha }}
+
+          ### Next Steps for Claude
+
+          1. Read the workflow run logs at the URL above
+          2. Identify the failing test(s) or build error
+          3. Read the relevant source files
+          4. Analyze the root cause
+          5. Create a fix
+          6. Open a PR with label `ai-generated-fix`
+
+          ### Failure Artifacts
+
+          EOF
+
+          # Append any downloaded test results
+          find . -name "TEST-*.xml" -exec echo "#### {}" \; -exec head -50 {} \; >> failure-report.md 2>/dev/null || echo "No test XML artifacts found" >> failure-report.md
+
+      - name: Create issue for Claude
+        uses: peter-evans/create-issue-from-file@v5
+        with:
+          title: "[AI-FIX] CI Failure: ${{ github.event.workflow_run.name }}"
+          content-filepath: failure-report.md
+          labels: ai-fix,ci-failure,automated
