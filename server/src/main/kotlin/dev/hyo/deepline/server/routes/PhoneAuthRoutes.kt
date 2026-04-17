@@ -12,6 +12,7 @@ import io.ktor.server.routing.post
 import io.ktor.server.routing.route
 import kotlinx.serialization.Serializable
 import java.security.MessageDigest
+import java.security.SecureRandom
 
 @Serializable
 data class SendOtpRequest(
@@ -61,8 +62,9 @@ fun Route.installPhoneAuthRoutes(
         windowSeconds = 300, // 10 requests per 5 minutes per IP
       )
 
-      // Generate a 6-digit OTP
-      val otp = (100000..999999).random().toString()
+      // Generate a 6-digit OTP using cryptographically secure random
+      val secureRandom = SecureRandom()
+      val otp = (100000 + secureRandom.nextInt(900000)).toString()
       val otpHash = hashOtp(otp)
 
       val verification = store.createPhoneVerification(
