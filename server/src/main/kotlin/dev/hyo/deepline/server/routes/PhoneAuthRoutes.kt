@@ -33,6 +33,9 @@ data class VerifyOtpRequest(
   val otpCode: String,
 )
 
+/** Shared SecureRandom instance for OTP generation. Thread-safe. */
+private val secureRandom = SecureRandom()
+
 fun Route.installPhoneAuthRoutes(
   config: DeeplineServerConfig,
   store: DeeplineStore,
@@ -63,7 +66,6 @@ fun Route.installPhoneAuthRoutes(
       )
 
       // Generate a 6-digit OTP using cryptographically secure random
-      val secureRandom = SecureRandom()
       val otp = (100000 + secureRandom.nextInt(900000)).toString()
       val otpHash = hashOtp(otp)
 

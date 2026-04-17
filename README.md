@@ -289,7 +289,8 @@ server/src/main/resources/db/migration/
 ├── V1__initial_schema.sql
 ├── V2__attachment_upload_sessions.sql
 ├── V3__group_member_roles.sql
-└── V4__mentions_and_media.sql
+├── V4__mentions_and_media.sql
+└── V5__phone_authentication.sql
 ```
 
 ### Android Release Build
@@ -339,6 +340,17 @@ xcodebuild -exportArchive \
 ```
 
 ## Server API Reference
+
+### Phone Authentication
+
+| Method | Endpoint | Description |
+|--------|----------|-------------|
+| POST | `/v1/auth/phone/send-code` | Send OTP to phone number |
+| POST | `/v1/auth/phone/verify` | Verify OTP code |
+
+**Rate limits:**
+- `send-code`: 3 per phone number per 5 minutes, 10 per IP per 5 minutes
+- `verify`: 5 attempts per verification per minute
 
 ### Account & Device
 
