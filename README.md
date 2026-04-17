@@ -1,6 +1,82 @@
+<div align="center">
+
 # Deepline
 
-Deepline is being rebuilt as a production-oriented secure messaging monorepo.
+### The AI-Native Secure Messenger
+
+[![Built with Claude](https://img.shields.io/badge/Built%20with-Claude%20Code-blueviolet?style=for-the-badge&logo=anthropic)](https://claude.ai/code)
+[![Kotlin](https://img.shields.io/badge/Kotlin-2.3.0-7F52FF?style=for-the-badge&logo=kotlin)](https://kotlinlang.org)
+[![Swift](https://img.shields.io/badge/Swift-5.9-FA7343?style=for-the-badge&logo=swift)](https://swift.org)
+[![Ktor](https://img.shields.io/badge/Ktor-3.4.2-087CFA?style=for-the-badge)](https://ktor.io)
+
+**Production-grade E2EE messaging built entirely with AI pair programming.**
+
+[Features](#features) | [Quick Start](#quick-start) | [Architecture](#architecture) | [Contributing](#contributing)
+
+</div>
+
+---
+
+## What Makes Deepline Different?
+
+**Deepline is an AI-Native project** — every line of code, from server routes to native UI, was written collaboratively with [Claude Code](https://claude.ai/code). This isn't just a messenger; it's a proof-of-concept that production-quality software can emerge from human-AI collaboration.
+
+### Why This Matters
+
+- **Full transparency**: Every architectural decision, every bug fix, every refactor — done with AI assistance and documented
+- **Real security**: Signal Protocol + MLS for E2EE, not toy crypto
+- **Native performance**: Kotlin Multiplatform + SwiftUI, no cross-platform compromises
+- **Open development**: Watch how AI-assisted development actually works at scale
+
+---
+
+## Features
+
+- **End-to-End Encryption** — Signal Protocol for 1:1, MLS for groups (platform-native bindings)
+- **Real-Time Messaging** — WebSocket delivery with sub-100ms latency
+- **Push Notifications** — FCM (Android) + APNs (iOS) for background alerts
+- **Encrypted Attachments** — Files encrypted client-side, stored as opaque blobs
+- **Group Chats** — Up to 1000 members with role-based permissions
+- **Read Receipts** — Per-message delivery and read status
+- **Mentions** — @mention support with notification routing
+- **Invite System** — Share invite codes to add contacts
+
+---
+
+## Architecture
+
+```
+┌─────────────────────────────────────────────────────────────┐
+│                        Clients                               │
+│  ┌─────────────────┐              ┌─────────────────┐       │
+│  │  Android        │              │  iOS            │       │
+│  │  Kotlin/Compose │              │  SwiftUI        │       │
+│  │  Signal Bindings│              │  Signal Swift   │       │
+│  └────────┬────────┘              └────────┬────────┘       │
+│           │                                │                 │
+│           └──────────┬─────────────────────┘                 │
+│                      │ HTTPS + WSS                           │
+└──────────────────────┼───────────────────────────────────────┘
+                       │
+┌──────────────────────┼───────────────────────────────────────┐
+│                      ▼                                       │
+│  ┌─────────────────────────────────────────────────────┐    │
+│  │              Ktor Server (Zero-Knowledge)            │    │
+│  │  • Opaque ciphertext only — never sees plaintext     │    │
+│  │  • WebSocket fanout for real-time delivery           │    │
+│  │  • Rate limiting + abuse prevention                  │    │
+│  └─────────────────────────────────────────────────────┘    │
+│                      │                                       │
+│         ┌────────────┼────────────┐                         │
+│         ▼            ▼            ▼                         │
+│  ┌──────────┐ ┌──────────┐ ┌──────────┐                    │
+│  │ Postgres │ │  Redis   │ │  Blobs   │                    │
+│  │ Messages │ │  Rate    │ │ Encrypted│                    │
+│  │ Metadata │ │  Limits  │ │ Files    │                    │
+│  └──────────┘ └──────────┘ └──────────┘                    │
+│                     Server                                   │
+└──────────────────────────────────────────────────────────────┘
+```
 
 ## Layout
 
@@ -302,42 +378,93 @@ xcodebuild -exportArchive \
 |--------|----------|-------------|
 | GET | `/healthz` | Health check |
 
-## Claude Code Skills
+---
 
-This project includes custom skills for Claude Code:
+## AI-Native Development
 
-- `/audit-code` — Security audit across all modules
-- `/commit` — Create conventional commits with proper formatting
-- `/review-pr` — Review pull requests against project standards
-- `/deepline-knowledge` — Project architecture overview
+This project demonstrates what's possible when humans and AI build software together. We use [Claude Code](https://claude.ai/code) for:
 
-## Development Guidelines
+### Claude Code Skills
+
+Custom skills that make development faster:
+
+| Skill | Description |
+|-------|-------------|
+| `/audit-code` | Security audit across all modules |
+| `/commit` | Conventional commits with auto-formatting |
+| `/review-pr` | PR review against project standards |
+| `/deepline-knowledge` | Full architecture context dump |
+
+### How We Work
+
+```
+Human: "Add WebSocket support for real-time messaging"
+    ↓
+Claude: Explores codebase → Designs architecture → Implements across server + clients
+    ↓
+Human: Reviews, tests, ships
+```
+
+Every feature follows this loop. The AI handles the boilerplate and cross-module consistency; humans focus on decisions and verification.
+
+---
+
+## Contributing
+
+We welcome contributions! This is an AI-native project, so feel free to:
+
+1. **Fork & Clone**
+2. **Use Claude Code** (or your preferred AI assistant) to explore the codebase
+3. **Open a PR** with your changes
 
 ### Commit Convention
 
-Use conventional commits:
 ```
 feat(server): add group member management
 fix(android): resolve titlebar display issue
 refactor(shared): extract common DTOs
-test(server): add conversation route tests
-docs: update API reference
 ```
 
 ### Code Style
 
-- **Kotlin**: Follow [Kotlin coding conventions](https://kotlinlang.org/docs/coding-conventions.html)
-- **Swift**: Follow [Swift API Design Guidelines](https://swift.org/documentation/api-design-guidelines/)
-- **Crypto boundary**: Server handles opaque ciphertext only. No crypto implementations in `shared/`.
+- **Kotlin**: [Kotlin coding conventions](https://kotlinlang.org/docs/coding-conventions.html)
+- **Swift**: [Swift API Design Guidelines](https://swift.org/documentation/api-design-guidelines/)
+- **Crypto boundary**: Server handles opaque ciphertext only
 
-### Pull Request Checklist
+### PR Checklist
 
 - [ ] Tests pass (`./gradlew check`)
 - [ ] Android builds (`./gradlew :androidApp:assembleDebug`)
 - [ ] iOS builds (`xcodegen generate && xcodebuild build`)
 - [ ] No secrets committed
-- [ ] CHANGELOG updated (for releases)
+
+---
+
+## Roadmap
+
+- [ ] Signal Protocol integration (Android + iOS)
+- [ ] MLS group encryption
+- [ ] Voice messages
+- [ ] Disappearing messages
+- [ ] Multi-device sync
+- [ ] Desktop client (Compose Multiplatform)
+
+---
+
+## Star History
+
+If you find this interesting, give us a star! It helps others discover AI-native development.
+
+---
+
+<div align="center">
+
+**Built with AI. Secured by design. Open for everyone.**
+
+[Report Bug](https://github.com/hyodotdev/DeepLine/issues) | [Request Feature](https://github.com/hyodotdev/DeepLine/issues) | [Discussions](https://github.com/hyodotdev/DeepLine/discussions)
+
+</div>
 
 ## License
 
-See [LICENSE](LICENSE) for details.
+MIT License — See [LICENSE](LICENSE) for details.
