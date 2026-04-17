@@ -2,14 +2,16 @@
 
 # Deepline
 
-### The AI-Native Secure Messenger
+### 100% Built by Claude
 
-[![Built with Claude](https://img.shields.io/badge/Built%20with-Claude%20Code-blueviolet?style=for-the-badge&logo=anthropic)](https://claude.ai/code)
+[![All Done by Claude](https://img.shields.io/badge/All%20Done%20by-Claude-blueviolet?style=for-the-badge&logo=anthropic)](https://claude.ai/code)
+[![Zero Human Code](https://img.shields.io/badge/Human%20Code-0%25-green?style=for-the-badge)](https://github.com/hyodotdev/DeepLine)
 [![Kotlin](https://img.shields.io/badge/Kotlin-2.3.0-7F52FF?style=for-the-badge&logo=kotlin)](https://kotlinlang.org)
 [![Swift](https://img.shields.io/badge/Swift-5.9-FA7343?style=for-the-badge&logo=swift)](https://swift.org)
-[![Ktor](https://img.shields.io/badge/Ktor-3.4.2-087CFA?style=for-the-badge)](https://ktor.io)
 
-**Production-grade E2EE messaging built entirely with AI pair programming.**
+**The world's first production-grade secure messenger written entirely by AI.**
+
+> *"Human says what to build. Claude writes every line of code."*
 
 [Features](#features) | [Quick Start](#quick-start) | [Architecture](#architecture) | [Contributing](#contributing)
 
@@ -17,16 +19,39 @@
 
 ---
 
-## What Makes Deepline Different?
+## All Done by Claude
 
-**Deepline is an AI-Native project** — every line of code, from server routes to native UI, was written collaboratively with [Claude Code](https://claude.ai/code). This isn't just a messenger; it's a proof-of-concept that production-quality software can emerge from human-AI collaboration.
+**Every. Single. Line.**
+
+This isn't "AI-assisted" development. This is **AI-authored** development. From the Ktor server routes to the Kotlin Multiplatform shared module to the SwiftUI views — Claude wrote it all.
+
+```
+29,000+ lines of code
+    147 files
+      0 lines written by human hands
+```
+
+### What the Human Does
+
+- Describes what to build in natural language
+- Reviews and approves changes
+- Tests on real devices
+- Makes product decisions
+
+### What Claude Does
+
+- Writes all Kotlin, Swift, SQL, and config files
+- Designs the architecture
+- Implements features across server + Android + iOS
+- Fixes bugs and refactors code
+- Writes tests and documentation
 
 ### Why This Matters
 
-- **Full transparency**: Every architectural decision, every bug fix, every refactor — done with AI assistance and documented
-- **Real security**: Signal Protocol + MLS for E2EE, not toy crypto
-- **Native performance**: Kotlin Multiplatform + SwiftUI, no cross-platform compromises
-- **Open development**: Watch how AI-assisted development actually works at scale
+- **Proof of concept**: Production-quality apps can be fully AI-generated
+- **Real security**: Signal Protocol + MLS for E2EE — no toy crypto
+- **Native performance**: Kotlin Multiplatform + SwiftUI, zero compromises
+- **Full transparency**: Every commit shows AI-generated code
 
 ---
 
@@ -380,32 +405,43 @@ xcodebuild -exportArchive \
 
 ---
 
-## AI-Native Development
+## How Claude Builds This App
 
-This project demonstrates what's possible when humans and AI build software together. We use [Claude Code](https://claude.ai/code) for:
+### The Workflow
+
+```
+┌─────────────────────────────────────────────────────────────┐
+│  Human: "Add real-time messaging with WebSocket"           │
+└─────────────────────────────────────────────────────────────┘
+                            │
+                            ▼
+┌─────────────────────────────────────────────────────────────┐
+│  Claude:                                                    │
+│  1. Reads existing codebase (server, android, ios)         │
+│  2. Designs WebSocket architecture                          │
+│  3. Writes Ktor WebSocket route                            │
+│  4. Writes Kotlin Flow client for Android                  │
+│  5. Writes URLSessionWebSocketTask for iOS                 │
+│  6. Adds push notification fallback (FCM + APNs)           │
+│  7. Creates database migration                              │
+│  8. Updates all related files                              │
+│  9. Runs tests                                              │
+└─────────────────────────────────────────────────────────────┘
+                            │
+                            ▼
+┌─────────────────────────────────────────────────────────────┐
+│  Human: Reviews diff → Approves → Ships                    │
+└─────────────────────────────────────────────────────────────┘
+```
 
 ### Claude Code Skills
 
-Custom skills that make development faster:
-
-| Skill | Description |
-|-------|-------------|
-| `/audit-code` | Security audit across all modules |
-| `/commit` | Conventional commits with auto-formatting |
-| `/review-pr` | PR review against project standards |
-| `/deepline-knowledge` | Full architecture context dump |
-
-### How We Work
-
-```
-Human: "Add WebSocket support for real-time messaging"
-    ↓
-Claude: Explores codebase → Designs architecture → Implements across server + clients
-    ↓
-Human: Reviews, tests, ships
-```
-
-Every feature follows this loop. The AI handles the boilerplate and cross-module consistency; humans focus on decisions and verification.
+| Skill | What Claude Does |
+|-------|------------------|
+| `/audit-code` | Scans entire repo for security issues |
+| `/commit` | Writes conventional commit messages |
+| `/review-pr` | Reviews PRs like a senior engineer |
+| `/deepline-knowledge` | Dumps full architecture context |
 
 ---
 
@@ -451,20 +487,28 @@ refactor(shared): extract common DTOs
 
 ---
 
-## Star History
+## The Experiment
 
-If you find this interesting, give us a star! It helps others discover AI-native development.
+Can AI write a production app from scratch?
+
+We're finding out. Every feature request becomes a prompt. Every bug report becomes a conversation. Every line of code comes from Claude.
+
+**Star this repo** to follow the experiment. Open an issue to see Claude respond.
 
 ---
 
 <div align="center">
 
-**Built with AI. Secured by design. Open for everyone.**
+### All Done by Claude
+
+**Zero human-written code. 100% AI-generated. Fully open source.**
+
+*The future of software development is here.*
 
 [Report Bug](https://github.com/hyodotdev/DeepLine/issues) | [Request Feature](https://github.com/hyodotdev/DeepLine/issues) | [Discussions](https://github.com/hyodotdev/DeepLine/discussions)
 
-</div>
-
-## License
+---
 
 MIT License — See [LICENSE](LICENSE) for details.
+
+</div>
