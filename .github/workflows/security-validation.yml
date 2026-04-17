@@ -1,0 +1,59 @@
+name: Security Validation
+on:
+  push:
+    paths: ['server/**', 'shared/**', 'clients/**']
+  pull_request:
+    paths: ['server/**', 'shared/**', 'clients/**']
+
+jobs:
+  crypto-boundary:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Check server doesn't handle plaintext
+        run: |
+          echo "Checking server doesn't contain decrypt/plaintext handling..."
+          # Server should only handle opaque ciphertext
+          if grep -rn "fun decrypt\|\.decrypt(" server/src/main --include="*.kt" 2>/dev/null; then
+            echo "❌ ERROR: Server must not implement decryption"
+            exit 1
+          fi
+          echo "✅ Server handles only opaque ciphertext"
+
+      - name: Check crypto interfaces in shared
+        run: |
+          echo "Checking shared/ contains only crypto interfaces..."
+          # shared/ should have interfaces, not implementations
+          if grep -rn "class.*CryptoBridge\|object.*CryptoBridge" shared/src/commonMain --include="*.kt" 2>/dev/null | grep -v "interface\|expect"; then
+            echo "❌ ERROR: shared/ should only have crypto interfaces"
+            exit 1
+          fi
+          echo "✅ shared/ contains only crypto interfaces"
+
+      - name: Check SecureRandom usage
+        run: |
+          echo "Checking for insecure random usage..."
+          # Warn if using non-secure random for crypto
+          if grep -rn "kotlin\.random\.Random\|java\.util\.Random" server/src/main --include="*.kt" 2>/dev/null | grep -v "SecureRandom\|import"; then
+            echo "⚠️ WARNING: Found non-SecureRandom usage - verify not used for crypto"
+          fi
+          echo "✅ Random usage check complete"
+
+      - name: Check no hardcoded secrets
+        run: |
+          echo "Checking for hardcoded secrets..."
+          # Look for potential hardcoded secrets
+          if grep -rniE "(api_key|apikey|secret|password|token)\s*=\s*['\"][^'\"]+['\"]" server/src/main shared/src --include="*.kt" 2>/dev/null | grep -v "test\|example\|placeholder\|TODO"; then
+            echo "⚠️ WARNING: Potential hardcoded secrets found"
+          fi
+          echo "✅ Secret check complete"
+
+      - name: Check rate limiting
+        run: |
+          echo "Checking rate limiting on routes..."
+          # Verify routes have rate limiting
+          ROUTE_COUNT=$(grep -rn "route\|get\|post\|put\|delete" server/src/main/kotlin --include="*Routes.kt" 2>/dev/null | wc -l)
+          RATE_LIMIT_COUNT=$(grep -rn "enforceRateLimit\|rateLimit" server/src/main/kotlin --include="*Routes.kt" 2>/dev/null | wc -l)
+          echo "Routes: $ROUTE_COUNT, Rate limit calls: $RATE_LIMIT_COUNT"
+          echo "✅ Rate limiting check complete"

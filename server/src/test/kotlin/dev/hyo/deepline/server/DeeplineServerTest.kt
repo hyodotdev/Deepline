@@ -23,6 +23,9 @@ import dev.hyo.deepline.shared.model.RegisterUserCommand
 import dev.hyo.deepline.shared.model.SendEncryptedMessageCommand
 import dev.hyo.deepline.shared.model.UploadedBlobReceipt
 import dev.hyo.deepline.shared.model.UserRecord
+import dev.hyo.deepline.server.routes.SendOtpRequest
+import dev.hyo.deepline.server.routes.SendOtpResponse
+import dev.hyo.deepline.server.routes.VerifyOtpRequest
 import io.ktor.client.request.get
 import io.ktor.client.request.header
 import io.ktor.client.request.post
@@ -222,6 +225,138 @@ class DeeplineServerTest {
     assertContains(secondMessageResponse.bodyAsText(), "Rate limit exceeded")
   }
 
+  @Test
+  fun `phone auth send code returns verification id in dev mode`() = testApplication {
+    application {
+      deeplineModule(localConfig())
+    }
+
+    val client = createClient {
+      expectSuccess = false
+    }
+
+    val response = postJson(
+      client,
+      "/v1/auth/phone/send-code",
+      SendOtpRequest(
+        phoneNumber = "1234567890",
+        countryCode = "+1",
+      ),
+    )
+
+    assertEquals(HttpStatusCode.OK, response.status)
+    val body = json.decodeFromString<SendOtpResponse>(response.bodyAsText())
+    assertContains(body.verificationId, "verify_")
+    assertContains(body.message, "Development mode: OTP is")
+  }
+
+  @Test
+  fun `phone auth verify with correct otp succeeds`() = testApplication {
+    application {
+      deeplineModule(localConfig())
+    }
+
+    val client = createClient {
+      expectSuccess = false
+    }
+
+    // Send code first
+    val sendResponse = postJson(
+      client,
+      "/v1/auth/phone/send-code",
+      SendOtpRequest(
+        phoneNumber = "9876543210",
+        countryCode = "+82",
+      ),
+    )
+    assertEquals(HttpStatusCode.OK, sendResponse.status)
+    val sendBody = json.decodeFromString<SendOtpResponse>(sendResponse.bodyAsText())
+
+    // Extract OTP from dev message (format: "Development mode: OTP is 123456")
+    val otp = sendBody.message.substringAfter("OTP is ").trim()
+
+    // Verify with correct OTP
+    val verifyResponse = postJson(
+      client,
+      "/v1/auth/phone/verify",
+      VerifyOtpRequest(
+        verificationId = sendBody.verificationId,
+        otpCode = otp,
+      ),
+    )
+
+    assertEquals(HttpStatusCode.OK, verifyResponse.status)
+    assertContains(verifyResponse.bodyAsText(), "\"success\": true")
+  }
+
+  @Test
+  fun `phone auth verify with wrong otp fails`() = testApplication {
+    application {
+      deeplineModule(localConfig())
+    }
+
+    val client = createClient {
+      expectSuccess = false
+    }
+
+    // Send code first
+    val sendResponse = postJson(
+      client,
+      "/v1/auth/phone/send-code",
+      SendOtpRequest(
+        phoneNumber = "5555555555",
+        countryCode = "+1",
+      ),
+    )
+    assertEquals(HttpStatusCode.OK, sendResponse.status)
+    val sendBody = json.decodeFromString<SendOtpResponse>(sendResponse.bodyAsText())
+
+    // Verify with wrong OTP
+    val verifyResponse = postJson(
+      client,
+      "/v1/auth/phone/verify",
+      VerifyOtpRequest(
+        verificationId = sendBody.verificationId,
+        otpCode = "000000", // Wrong OTP
+      ),
+    )
+
+    assertEquals(HttpStatusCode.OK, verifyResponse.status)
+    assertContains(verifyResponse.bodyAsText(), "\"success\": false")
+  }
+
+  @Test
+  fun `phone auth rate limits by phone number after 3 requests`() = testApplication {
+    application {
+      deeplineModule(localConfig())
+    }
+
+    val client = createClient {
+      expectSuccess = false
+    }
+
+    val phone = "2222222222"
+    val countryCode = "+1"
+
+    // First 3 requests succeed (limit is 3 per 5 minutes)
+    repeat(3) {
+      val response = postJson(
+        client,
+        "/v1/auth/phone/send-code",
+        SendOtpRequest(phoneNumber = phone, countryCode = countryCode),
+      )
+      assertEquals(HttpStatusCode.OK, response.status, "Request ${it + 1} should succeed")
+    }
+
+    // Fourth request should be rate limited
+    val response4 = postJson(
+      client,
+      "/v1/auth/phone/send-code",
+      SendOtpRequest(phoneNumber = phone, countryCode = countryCode),
+    )
+    assertEquals(HttpStatusCode.TooManyRequests, response4.status)
+  }
+
   private suspend fun registerUser(
     client: io.ktor.client.HttpClient,
     fingerprint: String,
@@ -259,6 +394,8 @@ class DeeplineServerTest {
     is AttachmentMetadataCommand -> AttachmentMetadataCommand.serializer()
     is CreateInviteCodeCommand -> CreateInviteCodeCommand.serializer()
     is AddContactByInviteCodeCommand -> AddContactByInviteCodeCommand.serializer()
+    is SendOtpRequest -> SendOtpRequest.serializer()
+    is VerifyOtpRequest -> VerifyOtpRequest.serializer()
     else -> error("No serializer registered for ${body::class.qualifiedName}")
   } as kotlinx.serialization.KSerializer<Any>
 

@@ -29,6 +29,7 @@ data class DeeplineServerConfig(
   val uploadSessionLimitPerMinute: Int = 30,
   val blobUploadLimitPerMinute: Int = 20,
   val inviteCreateLimitPerHour: Int = 20,
+  val otpHmacSecret: String = "deepline-dev-otp-secret-change-in-production",
 ) {
   companion object {
     fun fromEnvironment(): DeeplineServerConfig {
@@ -57,6 +58,7 @@ data class DeeplineServerConfig(
         uploadSessionLimitPerMinute = (System.getenv("DEEPLINE_UPLOAD_SESSION_LIMIT_PER_MINUTE") ?: "30").toInt(),
         blobUploadLimitPerMinute = (System.getenv("DEEPLINE_BLOB_UPLOAD_LIMIT_PER_MINUTE") ?: "20").toInt(),
         inviteCreateLimitPerHour = (System.getenv("DEEPLINE_INVITE_CREATE_LIMIT_PER_HOUR") ?: "20").toInt(),
+        otpHmacSecret = System.getenv("DEEPLINE_OTP_HMAC_SECRET") ?: "deepline-dev-otp-secret-change-in-production",
       )
     }
 

@@ -1,0 +1,137 @@
+{
+  "version": "1.0",
+  "description": "Common failure patterns and suggested fixes for autonomous iteration",
+  "patterns": [
+    {
+      "id": "missing-import",
+      "regex": "Unresolved reference: (\\w+)",
+      "type": "compilation",
+      "severity": "error",
+      "fix": "Add import for $1",
+      "strategy": "search-and-import"
+    },
+    {
+      "id": "type-mismatch",
+      "regex": "Type mismatch: inferred type is (\\w+) but (\\w+) was expected",
+      "type": "compilation",
+      "severity": "error",
+      "fix": "Cast or convert $1 to $2",
+      "strategy": "analyze-types"
+    },
+    {
+      "id": "assertion-failure",
+      "regex": "expected:<(.+)> but was:<(.+)>",
+      "type": "test",
+      "severity": "error",
+      "fix": "Check test expectation or fix implementation",
+      "strategy": "compare-expected-actual"
+    },
+    {
+      "id": "null-pointer",
+      "regex": "NullPointerException|null cannot be cast to non-null",
+      "type": "runtime",
+      "severity": "error",
+      "fix": "Add null check or use safe call operator",
+      "strategy": "null-safety"
+    },
+    {
+      "id": "missing-function",
+      "regex": "Unresolved reference: (\\w+)\\(\\)",
+      "type": "compilation",
+      "severity": "error",
+      "fix": "Implement missing function $1 or add import",
+      "strategy": "implement-or-import"
+    },
+    {
+      "id": "missing-parameter",
+      "regex": "No value passed for parameter '(\\w+)'",
+      "type": "compilation",
+      "severity": "error",
+      "fix": "Add missing parameter $1 to function call",
+      "strategy": "add-parameter"
+    },
+    {
+      "id": "visibility-error",
+      "regex": "Cannot access '(\\w+)': it is (\\w+) in",
+      "type": "compilation",
+      "severity": "error",
+      "fix": "Change visibility of $1 from $2 to internal/public",
+      "strategy": "adjust-visibility"
+    },
+    {
+      "id": "suspend-context",
+      "regex": "Suspend function '(\\w+)' should be called only from a coroutine",
+      "type": "compilation",
+      "severity": "error",
+      "fix": "Wrap call in coroutine scope or make calling function suspend",
+      "strategy": "coroutine-context"
+    },
+    {
+      "id": "http-status-mismatch",
+      "regex": "expected:<(\\d+)> but was:<(\\d+)>.*HttpStatusCode",
+      "type": "test",
+      "severity": "error",
+      "fix": "Check route handler returns correct status code",
+      "strategy": "analyze-http-response"
+    },
+    {
+      "id": "json-parse-error",
+      "regex": "JsonDecodingException|Unexpected JSON token",
+      "type": "runtime",
+      "severity": "error",
+      "fix": "Check JSON structure matches expected DTO",
+      "strategy": "validate-json-schema"
+    },
+    {
+      "id": "timeout",
+      "regex": "Timed out waiting for|SocketTimeoutException",
+      "type": "runtime",
+      "severity": "warning",
+      "fix": "Increase timeout or check for blocking operations",
+      "strategy": "async-analysis"
+    },
+    {
+      "id": "connection-refused",
+      "regex": "Connection refused|ConnectException",
+      "type": "runtime",
+      "severity": "error",
+      "fix": "Ensure service is running (Postgres/Redis in CI)",
+      "strategy": "check-services"
+    }
+  ],
+  "strategies": {
+    "search-and-import": {
+      "description": "Search codebase for symbol definition and add import",
+      "steps": [
+        "Grep for 'class $1' or 'fun $1' or 'object $1'",
+        "Find package declaration in matching file",
+        "Add import statement to failing file"
+      ]
+    },
+    "analyze-types": {
+      "description": "Analyze type hierarchy and apply correct conversion",
+      "steps": [
+        "Check if types are related (inheritance)",
+        "If convertible, add explicit cast or conversion",
+        "If not, fix the source of wrong type"
+      ]
+    },
+    "compare-expected-actual": {
+      "description": "Compare expected vs actual values to identify root cause",
+      "steps": [
+        "Read the test to understand intent",
+        "Read the implementation under test",
+        "Determine if test expectation is wrong or implementation is wrong",
+        "Fix the appropriate side"
+      ]
+    },
+    "null-safety": {
+      "description": "Apply Kotlin null safety patterns",
+      "steps": [
+        "Identify source of null value",
+        "Add null check with ?. or ?: operator",
+        "Or fix the source to not produce null"
+      ]
+    }
+  }
+}
