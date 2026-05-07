@@ -174,7 +174,7 @@ final class DeeplineAppModel: ObservableObject {
             try await self.ensureReachableServerBaseURL()
             let envelopes = try await self.client.listMessages(baseURL: self.serverBaseURL, conversationId: conversationId)
             let parsed = self.parseMessages(currentUserId: userId, envelopes: envelopes)
-            self.messages[conversationId] = parsed
+            self.replaceMessages(parsed, for: conversationId)
             self.updateConversationPreview(conversationId: conversationId, preview: parsed.last?.body)
         }
     }
@@ -242,7 +242,7 @@ final class DeeplineAppModel: ObservableObject {
         }
 
         let newMessage = parseMessage(currentUserId: currentUserId, envelope: envelope)
-        messages[conversationId] = existingMessages + [newMessage]
+        replaceMessages(existingMessages + [newMessage], for: conversationId)
         updateConversationPreview(conversationId: conversationId, preview: newMessage.body)
     }
 
@@ -353,7 +353,7 @@ final class DeeplineAppModel: ObservableObject {
     func loadGroupMembers(conversationId: String) async {
         await performSilentTask { [self] in
             let page = try await self.client.listConversationMembers(baseURL: self.serverBaseURL, conversationId: conversationId)
-            self.groupMembers[conversationId] = page.members
+            self.replaceGroupMembers(page.members, for: conversationId)
         }
     }
 
@@ -471,6 +471,18 @@ final class DeeplineAppModel: ObservableObject {
 
     func currentMessages(for conversationId: String) -> [DeeplineMessage] {
         messages[conversationId] ?? []
+    }
+
+    private func replaceMessages(_ newMessages: [DeeplineMessage], for conversationId: String) {
+        var updatedMessages = messages
+        updatedMessages[conversationId] = newMessages
+        messages = updatedMessages
+    }
+
+    private func replaceGroupMembers(_ members: [GroupMember], for conversationId: String) {
+        var updatedGroupMembers = groupMembers
+        updatedGroupMembers[conversationId] = members
+        groupMembers = updatedGroupMembers
     }
 
     func primaryConversationId() -> String? {
