@@ -1440,7 +1440,7 @@ private struct MemberRow: View {
                 )
 
             VStack(alignment: .leading, spacing: 4) {
-                Text("User \(member.userId.suffix(4))")
+                Text("User \(String(member.userId.suffix(4)))")
                     .font(.subheadline.weight(.medium))
                     .foregroundStyle(DeeplineTheme.onSurface(colorScheme))
 
