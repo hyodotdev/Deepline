@@ -474,6 +474,7 @@ final class DeeplineAppModel: ObservableObject {
     }
 
     private func replaceMessages(_ newMessages: [DeeplineMessage], for conversationId: String) {
+        guard messages[conversationId] != newMessages else { return }
         var updatedMessages = messages
         updatedMessages[conversationId] = newMessages
         messages = updatedMessages
