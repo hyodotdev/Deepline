@@ -180,7 +180,7 @@ enum GroupRole: String, Codable {
     case MEMBER
 }
 
-struct GroupMember: Codable, Identifiable {
+struct GroupMember: Codable, Equatable, Identifiable {
     let userId: String
     let role: GroupRole
     let addedByUserId: String?

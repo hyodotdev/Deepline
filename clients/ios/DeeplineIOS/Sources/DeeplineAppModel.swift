@@ -481,6 +481,7 @@ final class DeeplineAppModel: ObservableObject {
     }
 
     private func replaceGroupMembers(_ members: [GroupMember], for conversationId: String) {
+        guard groupMembers[conversationId] != members else { return }
         var updatedGroupMembers = groupMembers
         updatedGroupMembers[conversationId] = members
         groupMembers = updatedGroupMembers

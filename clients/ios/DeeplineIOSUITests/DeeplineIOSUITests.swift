@@ -49,8 +49,9 @@ final class DeeplineIOSUITests: XCTestCase {
         XCTAssertTrue(composer.waitForExistence(timeout: 10))
         composer.tap()
         composer.typeText("UITest secure note")
-        XCTAssertTrue(app.buttons["Send"].exists)
-        app.buttons["Send"].tap()
+        let sendButton = app.buttons["Send"]
+        XCTAssertTrue(sendButton.waitForExistence(timeout: 10))
+        sendButton.tap()
         XCTAssertTrue(app.staticTexts["UITest secure note"].waitForExistence(timeout: 10))
     }
 }
