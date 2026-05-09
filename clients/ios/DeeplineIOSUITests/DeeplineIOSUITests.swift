@@ -10,6 +10,8 @@ final class DeeplineIOSUITests: XCTestCase {
         app.launchArguments.append("-resetDeeplineState")
         app.launchEnvironment["DEEPLINE_SERVER_URL"] = "http://localhost:9091"
         addUIInterruptionMonitor(withDescription: "Notification permission") { alert in
+            let alertText = ([alert.label] + alert.staticTexts.allElementsBoundByIndex.map(\.label)).joined(separator: " ")
+            guard alertText.localizedCaseInsensitiveContains("notification") else { return false }
             if alert.buttons["Allow"].exists {
                 alert.buttons["Allow"].tap()
             } else if alert.buttons.count > 1 {
