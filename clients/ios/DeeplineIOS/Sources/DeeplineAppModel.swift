@@ -474,12 +474,12 @@ final class DeeplineAppModel: ObservableObject {
     }
 
     private func replaceMessages(_ newMessages: [DeeplineMessage], for conversationId: String) {
-        guard messages[conversationId] != newMessages else { return }
+        guard (messages[conversationId] ?? []) != newMessages else { return }
         messages[conversationId] = newMessages
     }
 
     private func replaceGroupMembers(_ newMembers: [GroupMember], for conversationId: String) {
-        guard groupMembers[conversationId] != newMembers else { return }
+        guard (groupMembers[conversationId] ?? []) != newMembers else { return }
         groupMembers[conversationId] = newMembers
     }
 

@@ -10,8 +10,15 @@ final class DeeplineIOSUITests: XCTestCase {
         app.launchArguments.append("-resetDeeplineState")
         app.launchEnvironment["DEEPLINE_SERVER_URL"] = "http://localhost:9091"
         addUIInterruptionMonitor(withDescription: "Notification permission") { alert in
-            guard alert.buttons.count > 0 else { return false }
-            alert.buttons.element(boundBy: 0).tap()
+            if alert.buttons["Allow"].exists {
+                alert.buttons["Allow"].tap()
+            } else if alert.buttons.count > 1 {
+                alert.buttons.element(boundBy: 1).tap()
+            } else if alert.buttons.count > 0 {
+                alert.buttons.element(boundBy: 0).tap()
+            } else {
+                return false
+            }
             return true
         }
         app.launch()
@@ -22,10 +29,7 @@ final class DeeplineIOSUITests: XCTestCase {
         setupButton.tap()
 
         let displayNameField = app.textFields["Enter your name"]
-        if !displayNameField.waitForExistence(timeout: 3), setupButton.exists {
-            setupButton.tap()
-        }
-        XCTAssertTrue(displayNameField.waitForExistence(timeout: 10))
+        XCTAssertTrue(displayNameField.waitForExistence(timeout: 15))
         displayNameField.tap()
         displayNameField.typeText("Codex Tester")
 
