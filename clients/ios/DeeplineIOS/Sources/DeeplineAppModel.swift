@@ -475,16 +475,12 @@ final class DeeplineAppModel: ObservableObject {
 
     private func replaceMessages(_ newMessages: [DeeplineMessage], for conversationId: String) {
         guard messages[conversationId] != newMessages else { return }
-        var updatedMessages = messages
-        updatedMessages[conversationId] = newMessages
-        messages = updatedMessages
+        messages[conversationId] = newMessages
     }
 
-    private func replaceGroupMembers(_ members: [GroupMember], for conversationId: String) {
-        guard groupMembers[conversationId] != members else { return }
-        var updatedGroupMembers = groupMembers
-        updatedGroupMembers[conversationId] = members
-        groupMembers = updatedGroupMembers
+    private func replaceGroupMembers(_ newMembers: [GroupMember], for conversationId: String) {
+        guard groupMembers[conversationId] != newMembers else { return }
+        groupMembers[conversationId] = newMembers
     }
 
     func primaryConversationId() -> String? {
