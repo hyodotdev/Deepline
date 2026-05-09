@@ -1093,6 +1093,7 @@ private struct ChatInputBar: View {
                             .foregroundStyle(draft.isEmpty ? DeeplineTheme.onSurfaceVariant(colorScheme) : .white)
                     }
                 }
+                .accessibilityLabel(draft.isEmpty ? "Voice message" : "Send")
             }
             .padding(.horizontal, 10)
             .padding(.vertical, 8)
@@ -1439,7 +1440,7 @@ private struct MemberRow: View {
                 )
 
             VStack(alignment: .leading, spacing: 4) {
-                Text("User \(member.userId.suffix(4))")
+                Text("User \(String(member.userId.suffix(4)))")
                     .font(.subheadline.weight(.medium))
                     .foregroundStyle(DeeplineTheme.onSurface(colorScheme))
 
